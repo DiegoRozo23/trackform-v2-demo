@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import {
     Box, Typography, Paper, Grid, Button, Table, TableBody, TableCell,
@@ -142,7 +142,7 @@ const FormBuilder = () => {
                                 label="Nombre del Formulario (Título)"
                                 variant="outlined"
                                 value={formName}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormName(e.target.value)}
+                                onChange={(e: ChangeEvent<HTMLInputElement>) => setFormName(e.target.value)}
                                 required
                             />
                         </Grid>
@@ -166,7 +166,7 @@ const FormBuilder = () => {
                                 label="Categoría (Ej: Rotativos)"
                                 variant="outlined"
                                 value={category}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCategory(e.target.value)}
+                                onChange={(e: ChangeEvent<HTMLInputElement>) => setCategory(e.target.value)}
                             />
                         </Grid>
                         <Grid size={{ xs: 12, md: 4 }}>
@@ -175,7 +175,7 @@ const FormBuilder = () => {
                                 label="Área de Aplicación"
                                 variant="outlined"
                                 value={area}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setArea(e.target.value)}
+                                onChange={(e: ChangeEvent<HTMLInputElement>) => setArea(e.target.value)}
                             />
                         </Grid>
                         <Grid size={{ xs: 12, md: 4 }}>
@@ -193,7 +193,7 @@ const FormBuilder = () => {
                                 label="Descripción del Procedimiento"
                                 variant="outlined"
                                 value={description}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDescription(e.target.value)}
+                                onChange={(e: ChangeEvent<HTMLInputElement>) => setDescription(e.target.value)}
                             />
                         </Grid>
                     </Grid>
@@ -220,7 +220,7 @@ const FormBuilder = () => {
                                             size="small"
                                             label="Descripción del Item"
                                             value={field.label}
-                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateField(field.id, { label: e.target.value })}
+                                            onChange={(e: ChangeEvent<HTMLInputElement>) => updateField(field.id, { label: e.target.value })}
                                         />
                                     </Grid>
                                     <Grid size={{ xs: 9, sm: 3 }}>
@@ -288,7 +288,7 @@ const FormBuilder = () => {
                     size="small"
                     placeholder="Buscar plantillas..."
                     value={searchTerm}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
                     InputProps={{
                         startAdornment: <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} fontSize="small" />,
                     }}

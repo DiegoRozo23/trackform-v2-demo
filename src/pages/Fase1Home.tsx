@@ -1,4 +1,4 @@
-import { Typography, Paper, Box, Divider } from "@mui/material";
+import { Box } from "@mui/material";
 import GestionControl from "../components/Fase3/GestionControl";
 
 const Fase1Home = () => {
