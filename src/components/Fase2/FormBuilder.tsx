@@ -1,4 +1,4 @@
-import { useState, useMemo, ChangeEvent } from "react";
+import { useState, useMemo, type ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import {
     Box, Typography, Paper, Grid, Button, Table, TableBody, TableCell,
