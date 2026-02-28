@@ -27,6 +27,12 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Diagnostic - List dist
+        run: ls -R dist
+
+      - name: Create .nojekyll
+        run: touch dist/.nojekyll
+
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         with:
