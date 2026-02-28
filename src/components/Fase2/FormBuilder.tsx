@@ -1,10 +1,10 @@
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import {
     Box, Typography, Paper, Grid, Button, Table, TableBody, TableCell,
     TableContainer, TableHead, TableRow, IconButton, TextField,
     Chip, FormControl, InputLabel, Select, MenuItem, Divider, Tooltip,
-    Switch, FormControlLabel
+    Switch, FormControlLabel, useMediaQuery, useTheme, Stack
 } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -24,6 +24,8 @@ const FormBuilder = () => {
     const updateTemplate = useDemoStore((state: any) => state.updateTemplate);
     const deleteTemplate = useDemoStore((state: any) => state.deleteTemplate);
     const toggleTemplateStatus = useDemoStore((state: any) => state.toggleTemplateStatus);
+    const isMobile = useMediaQuery(useTheme().breakpoints.down('md'));
+    const isSm = useMediaQuery(useTheme().breakpoints.down('sm'));
     const machines = useDemoStore((state: any) => state.machines); // Extract machines
 
     // View state: 'list' | 'editor'
@@ -132,7 +134,7 @@ const FormBuilder = () => {
                     </Typography>
                 </Box>
 
-                <Paper className="glass-card" sx={{ p: 4, borderRadius: 3, border: 'none' }}>
+                <Paper className="glass-card" sx={{ p: { xs: 2, md: 4 }, borderRadius: 3, border: 'none' }}>
                     <Grid container spacing={3}>
                         <Grid size={{ xs: 12, md: 6 }}>
                             <TextField
@@ -140,7 +142,7 @@ const FormBuilder = () => {
                                 label="Nombre del Formulario (Título)"
                                 variant="outlined"
                                 value={formName}
-                                onChange={(e) => setFormName(e.target.value)}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormName(e.target.value)}
                                 required
                             />
                         </Grid>
@@ -164,7 +166,7 @@ const FormBuilder = () => {
                                 label="Categoría (Ej: Rotativos)"
                                 variant="outlined"
                                 value={category}
-                                onChange={(e) => setCategory(e.target.value)}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCategory(e.target.value)}
                             />
                         </Grid>
                         <Grid size={{ xs: 12, md: 4 }}>
@@ -173,7 +175,7 @@ const FormBuilder = () => {
                                 label="Área de Aplicación"
                                 variant="outlined"
                                 value={area}
-                                onChange={(e) => setArea(e.target.value)}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setArea(e.target.value)}
                             />
                         </Grid>
                         <Grid size={{ xs: 12, md: 4 }}>
@@ -191,7 +193,7 @@ const FormBuilder = () => {
                                 label="Descripción del Procedimiento"
                                 variant="outlined"
                                 value={description}
-                                onChange={(e) => setDescription(e.target.value)}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDescription(e.target.value)}
                             />
                         </Grid>
                     </Grid>
@@ -209,37 +211,37 @@ const FormBuilder = () => {
                         {fields.map((field, index) => (
                             <Paper key={field.id} elevation={0} sx={{ p: 2, mb: 2, border: '1px solid #eee', borderRadius: 2, bgcolor: '#fff', '&:hover': { borderColor: 'primary.light' } }}>
                                 <Grid container spacing={2} alignItems="center">
-                                    <Grid size={{ xs: 1 }}>
+                                    <Grid size={{ xs: 12, sm: 1 }}>
                                         <Typography variant="subtitle2" color="primary">#{index + 1}</Typography>
                                     </Grid>
-                                    <Grid size={{ xs: 6 }}>
+                                    <Grid size={{ xs: 12, sm: 6 }}>
                                         <TextField
                                             fullWidth
                                             size="small"
                                             label="Descripción del Item"
                                             value={field.label}
-                                            onChange={(e) => updateField(field.id, { label: e.target.value })}
+                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateField(field.id, { label: e.target.value })}
                                         />
                                     </Grid>
-                                    <Grid size={{ xs: 3 }}>
+                                    <Grid size={{ xs: 9, sm: 3 }}>
                                         <FormControl fullWidth size="small">
-                                            <InputLabel>Tipo de Respuesta</InputLabel>
+                                            <InputLabel>Respuesta</InputLabel>
                                             <Select
                                                 value={field.type}
-                                                label="Tipo de Respuesta"
+                                                label="Respuesta"
                                                 onChange={(e) => updateField(field.id, { type: e.target.value as FieldType })}
                                             >
-                                                <MenuItem value="text">Observación de Texto</MenuItem>
-                                                <MenuItem value="checklist">Pasa / No Pasa / NA</MenuItem>
-                                                <MenuItem value="camera">Captura de Fotografía</MenuItem>
-                                                <MenuItem value="number">Medición Numérica</MenuItem>
-                                                <MenuItem value="date">Fecha Específica</MenuItem>
+                                                <MenuItem value="text">Observación Texto</MenuItem>
+                                                <MenuItem value="checklist">Cumple / Falla</MenuItem>
+                                                <MenuItem value="camera">Fotografía</MenuItem>
+                                                <MenuItem value="number">Medición</MenuItem>
+                                                <MenuItem value="date">Fecha</MenuItem>
                                             </Select>
                                         </FormControl>
                                     </Grid>
-                                    <Grid size={{ xs: 2 }} sx={{ textAlign: 'right' }}>
-                                        <IconButton color="error" onClick={() => removeField(field.id)}>
-                                            <DeleteIcon />
+                                    <Grid size={{ xs: 3, sm: 2 }} sx={{ textAlign: 'right' }}>
+                                        <IconButton color="error" onClick={() => removeField(field.id)} size="small">
+                                            <DeleteIcon fontSize="small" />
                                         </IconButton>
                                     </Grid>
                                 </Grid>
@@ -247,10 +249,24 @@ const FormBuilder = () => {
                         ))}
                     </Box>
 
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 4 }}>
-                        <Button variant="outlined" onClick={handleCloseEditor}>Cancelar</Button>
-                        <Button variant="contained" startIcon={<SaveIcon />} onClick={handleSave} size="large">
-                            {editingId ? 'Actualizar Versión' : 'Publicar Formulario'}
+                    <Box sx={{
+                        display: 'flex',
+                        flexDirection: { xs: 'column-reverse', sm: 'row' },
+                        justifyContent: 'flex-end',
+                        gap: 2,
+                        mt: 4
+                    }}>
+                        <Button variant="outlined" onClick={handleCloseEditor} fullWidth={isSm}>
+                            Cancelar
+                        </Button>
+                        <Button
+                            variant="contained"
+                            startIcon={<SaveIcon />}
+                            onClick={handleSave}
+                            size="large"
+                            fullWidth={isSm}
+                        >
+                            {editingId ? 'Actualizar' : 'Publicar'}
                         </Button>
                     </Box>
                 </Paper>
@@ -260,71 +276,123 @@ const FormBuilder = () => {
 
     return (
         <Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+            <Box sx={{
+                display: 'flex',
+                flexDirection: { xs: 'column', sm: 'row' },
+                justifyContent: 'space-between',
+                alignItems: { xs: 'stretch', sm: 'center' },
+                mb: 3,
+                gap: 2
+            }}>
                 <TextField
                     size="small"
-                    placeholder="Buscar por nombre, máquina o categoría..."
+                    placeholder="Buscar plantillas..."
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
                     InputProps={{
                         startAdornment: <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} fontSize="small" />,
                     }}
-                    sx={{ minWidth: 350, bgcolor: 'white' }}
+                    sx={{ width: { xs: '100%', sm: 350 }, bgcolor: 'white' }}
                 />
-                <Button variant="contained" startIcon={<AddIcon />} onClick={() => handleOpenEditor()}>
-                    Crear Nueva Inspección
+                <Button variant="contained" startIcon={<AddIcon />} onClick={() => handleOpenEditor()} sx={{ minHeight: 45 }}>
+                    Nueva Inspección
                 </Button>
             </Box>
 
-            <TableContainer component={Paper} elevation={0} sx={{ borderRadius: 3, border: '1px solid #eee', overflow: 'hidden' }}>
-                <Table>
-                    <TableHead sx={{ bgcolor: '#f5f5f5' }}>
-                        <TableRow>
-                            <TableCell><b>Nombre / Título</b></TableCell>
-                            <TableCell><b>Categoría</b></TableCell>
-                            <TableCell><b>Máquina/Activo</b></TableCell>
-                            <TableCell><b>Versión</b></TableCell>
-                            <TableCell><b>Estado</b></TableCell>
-                            <TableCell align="right"><b>Acciones</b></TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {filteredTemplates.map((tpl: any) => (
-                            <TableRow key={tpl.id} hover>
-                                <TableCell>
-                                    <Typography variant="body2" fontWeight="bold">{tpl.name}</Typography>
-                                    <Typography variant="caption" color="text.secondary">ID: {tpl.id.substring(0, 8)}</Typography>
-                                </TableCell>
-                                <TableCell>
-                                    <Chip label={tpl.category || 'N/A'} size="small" variant="outlined" />
-                                </TableCell>
-                                <TableCell>{tpl.machineType}</TableCell>
-                                <TableCell>v{tpl.version || 1}</TableCell>
-                                <TableCell>
-                                    <Chip
-                                        label={tpl.active ? "Activo" : "Pausado"}
-                                        color={tpl.active ? "success" : "default"}
-                                        size="small"
-                                    />
-                                </TableCell>
-                                <TableCell align="right">
-                                    <Tooltip title={tpl.active ? "Pausar Formulario" : "Activar Formulario"}>
-                                        <IconButton size="small" onClick={() => toggleTemplateStatus(tpl.id)} color={tpl.active ? "warning" : "success"}>
-                                            {tpl.active ? <PauseIcon fontSize="small" /> : <PlayArrowIcon fontSize="small" />}
-                                        </IconButton>
-                                    </Tooltip>
-                                    <Tooltip title="Editar">
-                                        <IconButton size="small" color="primary" onClick={() => handleOpenEditor(tpl)}><EditIcon fontSize="small" /></IconButton>
-                                    </Tooltip>
-                                    <Tooltip title="Eliminar">
-                                        <IconButton size="small" color="error" onClick={() => deleteTemplate(tpl.id)}><DeleteIcon fontSize="small" /></IconButton>
-                                    </Tooltip>
-                                </TableCell>
+            {!isMobile ? (
+                <TableContainer component={Paper} elevation={0} sx={{ borderRadius: 3, border: '1px solid #eee', overflow: 'hidden' }}>
+                    <Table>
+                        <TableHead sx={{ bgcolor: '#f5f5f5' }}>
+                            <TableRow>
+                                <TableCell><b>Nombre / Título</b></TableCell>
+                                <TableCell><b>Categoría</b></TableCell>
+                                <TableCell><b>Máquina/Activo</b></TableCell>
+                                <TableCell><b>Versión</b></TableCell>
+                                <TableCell><b>Estado</b></TableCell>
+                                <TableCell align="right"><b>Acciones</b></TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                        </TableHead>
+                        <TableBody>
+                            {filteredTemplates.map((tpl: any) => (
+                                <TableRow key={tpl.id} hover>
+                                    <TableCell>
+                                        <Typography variant="body2" fontWeight="bold">{tpl.name}</Typography>
+                                        <Typography variant="caption" color="text.secondary">ID: {tpl.id.substring(0, 8)}</Typography>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Chip label={tpl.category || 'N/A'} size="small" variant="outlined" />
+                                    </TableCell>
+                                    <TableCell>{tpl.machineType}</TableCell>
+                                    <TableCell>v{tpl.version || 1}</TableCell>
+                                    <TableCell>
+                                        <Chip
+                                            label={tpl.active ? "Activo" : "Pausado"}
+                                            color={tpl.active ? "success" : "default"}
+                                            size="small"
+                                        />
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <Tooltip title={tpl.active ? "Pausar Formulario" : "Activar Formulario"}>
+                                            <IconButton size="small" onClick={() => toggleTemplateStatus(tpl.id)} color={tpl.active ? "warning" : "success"}>
+                                                {tpl.active ? <PauseIcon fontSize="small" /> : <PlayArrowIcon fontSize="small" />}
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title="Editar">
+                                            <IconButton size="small" color="primary" onClick={() => handleOpenEditor(tpl)}><EditIcon fontSize="small" /></IconButton>
+                                        </Tooltip>
+                                        <Tooltip title="Eliminar">
+                                            <IconButton size="small" color="error" onClick={() => deleteTemplate(tpl.id)}><DeleteIcon fontSize="small" /></IconButton>
+                                        </Tooltip>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            ) : (
+                <Stack spacing={2}>
+                    {filteredTemplates.map((tpl: any) => (
+                        <Paper key={tpl.id} variant="outlined" sx={{ p: 2, borderRadius: 2 }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                                <Typography variant="subtitle2" fontWeight="bold">{tpl.name}</Typography>
+                                <Chip
+                                    label={tpl.active ? "Activo" : "Pausado"}
+                                    color={tpl.active ? "success" : "default"}
+                                    size="small"
+                                    sx={{ height: 20, fontSize: '0.7rem' }}
+                                />
+                            </Box>
+                            <Typography variant="caption" color="text.secondary" display="block">Activo: {tpl.machineType}</Typography>
+                            <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
+                                <Chip label={tpl.category || 'Inspección'} size="small" variant="outlined" />
+                                <Chip label={`v${tpl.version || 1}`} size="small" variant="outlined" />
+                            </Box>
+                            <Divider sx={{ my: 1.5 }} />
+                            <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
+                                <Button
+                                    size="small"
+                                    variant="outlined"
+                                    color={tpl.active ? "warning" : "success"}
+                                    onClick={() => toggleTemplateStatus(tpl.id)}
+                                >
+                                    {tpl.active ? "Pausar" : "Activar"}
+                                </Button>
+                                <Button
+                                    size="small"
+                                    variant="outlined"
+                                    onClick={() => handleOpenEditor(tpl)}
+                                    startIcon={<EditIcon />}
+                                >
+                                    Editar
+                                </Button>
+                                <IconButton size="small" color="error" onClick={() => deleteTemplate(tpl.id)}>
+                                    <DeleteIcon fontSize="small" />
+                                </IconButton>
+                            </Box>
+                        </Paper>
+                    ))}
+                </Stack>
+            )}
         </Box>
     );
 };

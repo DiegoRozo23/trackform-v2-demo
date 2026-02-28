@@ -117,17 +117,24 @@ const AnalisisFallas = () => {
 
     return (
         <Box>
-            <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <Box sx={{
+                mb: 4,
+                display: 'flex',
+                flexDirection: { xs: 'column', sm: 'row' },
+                justifyContent: 'space-between',
+                alignItems: { xs: 'stretch', sm: 'center' },
+                gap: 2
+            }}>
                 <Box>
-                    <Typography variant="h5" fontWeight="bold">Inteligencia de Salud de Activos</Typography>
-                    <Typography variant="body2" color="text.secondary">Análisis de criticidad por equipo y alertas de mantenimiento vencido</Typography>
+                    <Typography variant="h5" fontWeight="bold">Estado de Salud de Activos</Typography>
+                    <Typography variant="body2" color="text.secondary">Análisis de criticidad por equipo y mantenimiento vencido</Typography>
                 </Box>
                 <TextField
                     select
                     size="small"
                     value={selectedMachine}
                     onChange={(e) => setSelectedMachine(e.target.value)}
-                    sx={{ width: 300 }}
+                    sx={{ width: { xs: '100%', sm: 300 } }}
                     label="Filtrar por Equipo"
                 >
                     {machineList.map(m => <MenuItem key={m} value={m}>{m}</MenuItem>)}
@@ -146,7 +153,7 @@ const AnalisisFallas = () => {
                         <ResponsiveContainer width="100%" height="85%">
                             <RadarChart cx="50%" cy="50%" outerRadius="80%" data={failuresByQuestion}>
                                 <PolarGrid />
-                                <PolarAngleAxis dataKey="name" fontSize={10} />
+                                <PolarAngleAxis dataKey="name" fontSize={9} />
                                 <PolarRadiusAxis />
                                 <Radar
                                     name="Hallazgos"

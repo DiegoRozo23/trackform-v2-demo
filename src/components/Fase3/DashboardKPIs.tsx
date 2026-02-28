@@ -89,23 +89,32 @@ const DashboardKPIs = () => {
 
     return (
         <Box>
-            <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
+            <Box sx={{
+                mb: 4,
+                display: 'flex',
+                flexDirection: { xs: 'column', sm: 'row' },
+                justifyContent: 'space-between',
+                alignItems: { xs: 'flex-start', sm: 'center' },
+                flexWrap: 'wrap',
+                gap: 2
+            }}>
                 <Box>
                     <Typography variant="h5" fontWeight="bold">Inteligencia de Gestión</Typography>
                     <Typography variant="body2" color="text.secondary">Indicadores de cumplimiento y rendimiento operativo</Typography>
                 </Box>
-                <Stack direction="row" spacing={1}>
+                <Stack direction="row" spacing={1} sx={{ width: { xs: '100%', sm: 'auto' }, overflowX: 'auto', pb: 1 }}>
                     {["HOY", "SEMANA", "MES"].map(range => (
                         <Button
                             key={range}
                             variant={timeRange === range ? "contained" : "outlined"}
                             size="small"
                             onClick={() => setTimeRange(range)}
+                            sx={{ minWidth: 80 }}
                         >
                             {range}
                         </Button>
                     ))}
-                    <Button variant="outlined" startIcon={<FileDownloadIcon />} size="small">Reporte Ejecutivo</Button>
+                    <Button variant="outlined" startIcon={<FileDownloadIcon />} size="small" sx={{ minWidth: 150 }}>Reporte</Button>
                 </Stack>
             </Box>
 

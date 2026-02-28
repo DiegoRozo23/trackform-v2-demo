@@ -20,7 +20,14 @@ const MaquinasYQRs = () => {
 
     return (
         <Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+            <Box sx={{
+                display: 'flex',
+                flexDirection: { xs: 'column', sm: 'row' },
+                justifyContent: 'space-between',
+                alignItems: { xs: 'flex-start', sm: 'center' },
+                mb: 3,
+                gap: 2
+            }}>
                 <Box>
                     <Typography variant="h6" fontWeight="bold">Identificación de Activos (QRs)</Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -33,7 +40,14 @@ const MaquinasYQRs = () => {
             <Grid container spacing={3}>
                 {templates.filter((t: any) => t.active).map((tpl: any) => (
                     <Grid size={{ xs: 12, md: 6, lg: 4 }} key={tpl.id}>
-                        <Paper elevation={0} variant="outlined" sx={{ p: 4, textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column', borderRadius: 2 }}>
+                        <Paper elevation={0} variant="outlined" sx={{
+                            p: { xs: 2.5, md: 4 },
+                            textAlign: 'center',
+                            height: '100%',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            borderRadius: 2
+                        }}>
                             <Box sx={{ mb: 1 }}>
                                 <Chip label={tpl.category || 'Sin Categoría'} size="small" variant="outlined" sx={{ mb: 1 }} />
                                 <Typography variant="subtitle1" fontWeight="bold">{tpl.machineType}</Typography>

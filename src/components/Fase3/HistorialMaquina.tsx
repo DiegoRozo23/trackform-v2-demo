@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import {
     Box, Typography, Paper, Grid, Divider,
-    TextField, MenuItem, Button, Chip
+    TextField, MenuItem, Button, Chip, useMediaQuery, useTheme
 } from "@mui/material";
 import { Timeline, TimelineItem, TimelineSeparator, TimelineDot, TimelineConnector, TimelineContent, TimelineOppositeContent } from '@mui/lab';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -13,6 +13,7 @@ import { useDemoStore } from "../../store/demoStore";
 import MantenimientoDetalleModal from "./MantenimientoDetalleModal";
 
 const HistorialMaquina = () => {
+    const isSmallScreen = useMediaQuery(useTheme().breakpoints.down('sm'));
     const mantenimientos = useDemoStore((state: any) => state.mantenimientos);
     const templates = useDemoStore((state: any) => state.templates);
 
@@ -54,7 +55,14 @@ const HistorialMaquina = () => {
 
     return (
         <Box>
-            <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
+            <Box sx={{
+                mb: 4,
+                display: 'flex',
+                flexDirection: { xs: 'column', sm: 'row' },
+                justifyContent: 'space-between',
+                alignItems: { xs: 'flex-start', sm: 'center' },
+                gap: 2
+            }}>
                 <Box>
                     <Typography variant="h5" fontWeight="bold">Histórico Auditable por Equipo</Typography>
                     <Typography variant="body2" color="text.secondary">Trazabilidad inalterable y cronología técnica de activos</Typography>
@@ -64,8 +72,10 @@ const HistorialMaquina = () => {
                     color="primary"
                     startIcon={<FileDownloadIcon />}
                     onClick={handleExportHistory}
+                    fullWidth={isSmallScreen}
+                    sx={{ minHeight: 48 }}
                 >
-                    Exportar Libro de Vida
+                    Exportar Carpeta Histórica (Auditable)
                 </Button>
             </Box>
 
@@ -99,7 +109,7 @@ const HistorialMaquina = () => {
                 </Grid>
 
                 <Grid size={{ xs: 12, md: 9 }}>
-                    <Paper variant="outlined" sx={{ p: 4, borderRadius: 2, minHeight: 500 }}>
+                    <Paper variant="outlined" sx={{ p: { xs: 1, sm: 4 }, borderRadius: 2, minHeight: 500 }}>
                         {historyData.length > 0 ? (
                             <Timeline position="right">
                                 {historyData.map((mnt: any, index: number) => (

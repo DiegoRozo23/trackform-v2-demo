@@ -1,7 +1,7 @@
 import { useState, useRef, useMemo } from "react";
 import {
     Box, Typography, Paper, Grid, Button, TextField,
-    Divider, Chip, MenuItem
+    Divider, Chip, MenuItem, useMediaQuery, useTheme
 } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDemoStore } from "../store/demoStore";
@@ -18,6 +18,8 @@ const FormExecutor = () => {
     const templates = useDemoStore((state: any) => state.templates);
     const machines = useDemoStore((state: any) => state.machines); // Extract machines
     const addMantenimiento = useDemoStore((state: any) => state.addMantenimiento);
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     // Derived state for current template
     const template = useMemo(() =>
@@ -86,9 +88,22 @@ const FormExecutor = () => {
     };
 
     return (
-        <Box sx={{ maxWidth: 900, margin: '0 auto', pb: 8 }}>
-            <Paper className="glass-card" sx={{ p: 4, borderRadius: 4, mb: 4, border: 'none', background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%)' }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+        <Box sx={{ maxWidth: 900, margin: '0 auto', pb: 8, px: { xs: 1, sm: 2 } }}>
+            <Paper className="glass-card" sx={{
+                p: { xs: 2.5, md: 4 },
+                borderRadius: { xs: 2, md: 4 },
+                mb: 4,
+                border: 'none',
+                background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%)'
+            }}>
+                <Box sx={{
+                    display: 'flex',
+                    flexDirection: { xs: 'column', sm: 'row' },
+                    justifyContent: 'space-between',
+                    alignItems: { xs: 'flex-start', sm: 'center' },
+                    mb: 2,
+                    gap: 2
+                }}>
                     <Box>
                         <Typography variant="h4" fontWeight="bold" color="primary">{template.name}</Typography>
                         <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
@@ -112,7 +127,7 @@ const FormExecutor = () => {
                     {template.description || "Diligenciamiento de inspección técnica e integridad para activos industriales."}
                 </Typography>
 
-                <Paper elevation={0} variant="outlined" sx={{ p: 4, borderRadius: 2 }}>
+                <Paper elevation={0} variant="outlined" sx={{ p: { xs: 2, md: 4 }, borderRadius: 2 }}>
                     <Typography variant="h6" gutterBottom fontWeight="bold">Configuración de Inspección</Typography>
                     <Grid container spacing={2} sx={{ mb: 4 }}>
                         <Grid size={{ xs: 12, md: 8 }}>
@@ -238,11 +253,23 @@ const FormExecutor = () => {
                         <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 2 }}>
                             La firma garantiza que la información fue capturada por el técnico autorizado.
                         </Typography>
-                        <Box sx={{ border: '2px solid #eee', borderRadius: 2, bgcolor: '#fafafa', width: '100%', maxWidth: 500 }}>
+                        <Box sx={{
+                            border: '2px solid #eee',
+                            borderRadius: 2,
+                            bgcolor: '#fafafa',
+                            width: '100%',
+                            maxWidth: 500,
+                            overflow: 'hidden',
+                            touchAction: 'none' // Important for signature on mobile
+                        }}>
                             <SignatureCanvas
                                 ref={sigCanvas}
                                 penColor="navy"
-                                canvasProps={{ width: 500, height: 180, className: 'sigCanvas' }}
+                                canvasProps={{
+                                    width: isMobile ? 300 : 500,
+                                    height: 180,
+                                    className: 'sigCanvas'
+                                }}
                             />
                         </Box>
                         <Button size="small" onClick={() => sigCanvas.current?.clear()} sx={{ mt: 1 }}>Limpiar Lienzo</Button>
@@ -250,21 +277,36 @@ const FormExecutor = () => {
 
                     <Divider sx={{ my: 4 }} />
 
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-                        <Button variant="outlined" onClick={() => navigate('/constructor')} size="large" sx={{ borderRadius: 2 }}>Cancelar</Button>
+                    <Box sx={{
+                        display: 'flex',
+                        flexDirection: { xs: 'column-reverse', sm: 'row' },
+                        justifyContent: 'flex-end',
+                        gap: 2
+                    }}>
+                        <Button
+                            variant="outlined"
+                            onClick={() => navigate('/constructor')}
+                            size="large"
+                            fullWidth={isMobile}
+                            sx={{ borderRadius: 2, height: 56 }}
+                        >
+                            Cancelar
+                        </Button>
                         <Button
                             variant="contained"
                             startIcon={<SaveIcon />}
                             onClick={handleSave}
                             size="large"
+                            fullWidth={isMobile}
                             sx={{
                                 borderRadius: 2,
                                 px: 4,
+                                height: 56,
                                 background: 'var(--primary-color)',
                                 '&:hover': { background: '#000' }
                             }}
                         >
-                            Finalizar y Sellar Registro
+                            Finalizar y Sellar
                         </Button>
                     </Box>
                 </Paper>

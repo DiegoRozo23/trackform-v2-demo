@@ -65,7 +65,16 @@ const Fase2Portal = () => {
 
             <Paper elevation={0} sx={{ mt: 3, p: 2, borderRadius: 2 }}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <Tabs value={value} onChange={handleChange} aria-label="operations tabs" textColor="primary" indicatorColor="primary">
+                    <Tabs
+                        value={value}
+                        onChange={handleChange}
+                        aria-label="operations tabs"
+                        textColor="primary"
+                        indicatorColor="primary"
+                        variant="scrollable"
+                        scrollButtons="auto"
+                        allowScrollButtonsMobile
+                    >
                         <Tab label="Monitor de Operaciones" />
                         <Tab label="Constructor de Formularios" />
                         <Tab label="Equipos & QRs" />

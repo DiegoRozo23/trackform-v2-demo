@@ -3,7 +3,8 @@ import {
     Box, Typography, Paper, TextField, Button,
     Tabs, Tab, Table, TableBody, TableCell, TableContainer,
     TableHead, TableRow, IconButton, Chip, Dialog,
-    DialogTitle, DialogContent, DialogActions, MenuItem, Stack
+    DialogTitle, DialogContent, DialogActions, MenuItem, Stack,
+    useMediaQuery, useTheme
 } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -17,6 +18,7 @@ const GestionControl = () => {
     const [tab, setTab] = useState(0);
     const [search, setSearch] = useState("");
     const { machines, users, addMachine, updateMachine, deleteMachine, addUser, updateUser, deleteUser } = useDemoStore();
+    const isMobile = useMediaQuery(useTheme().breakpoints.down('sm'));
 
     // Modal State
     const [open, setOpen] = useState(false);
@@ -71,7 +73,14 @@ const GestionControl = () => {
 
     return (
         <Box>
-            <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Box sx={{
+                mb: 4,
+                display: 'flex',
+                flexDirection: { xs: 'column', sm: 'row' },
+                justifyContent: 'space-between',
+                alignItems: { xs: 'flex-start', sm: 'center' },
+                gap: 2
+            }}>
                 <Box>
                     <Typography variant="h5" fontWeight="bold">Gestión de Recursos</Typography>
                     <Typography variant="body2" color="text.secondary">Control centralizado de activos físicos y personal técnico</Typography>
@@ -80,16 +89,31 @@ const GestionControl = () => {
                     variant="contained"
                     startIcon={<AddIcon />}
                     onClick={() => handleOpen()}
+                    fullWidth={isMobile}
+                    sx={{ minHeight: 48 }}
                 >
                     Añadir {tab === 0 ? 'Máquina' : 'Usuario'}
                 </Button>
             </Box>
 
-            <Paper variant="outlined" sx={{ mb: 3, borderRadius: 2 }}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex', alignItems: 'center', px: 2 }}>
-                    <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ flexGrow: 1 }}>
-                        <Tab icon={<PrecisionManufacturingIcon />} iconPosition="start" label="Máquinas (Equipos)" />
-                        <Tab icon={<PeopleIcon />} iconPosition="start" label="Usuarios (Personal)" />
+            <Paper variant="outlined" sx={{ mb: 3, borderRadius: 2, overflow: 'hidden' }}>
+                <Box sx={{
+                    borderBottom: 1,
+                    borderColor: 'divider',
+                    display: 'flex',
+                    flexDirection: { xs: 'column', md: 'row' },
+                    alignItems: { xs: 'stretch', md: 'center' },
+                    px: 2
+                }}>
+                    <Tabs
+                        value={tab}
+                        onChange={(_, v) => setTab(v)}
+                        variant="scrollable"
+                        scrollButtons="auto"
+                        sx={{ flexGrow: 1 }}
+                    >
+                        <Tab icon={<PrecisionManufacturingIcon />} iconPosition="start" label="Máquinas" />
+                        <Tab icon={<PeopleIcon />} iconPosition="start" label="Usuarios" />
                     </Tabs>
                     <TextField
                         size="small"
@@ -97,7 +121,7 @@ const GestionControl = () => {
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         InputProps={{ startAdornment: <SearchIcon fontSize="small" sx={{ mr: 1, color: 'text.secondary' }} /> }}
-                        sx={{ width: 250, my: 1 }}
+                        sx={{ width: { xs: '100%', md: 250 }, my: 1 }}
                     />
                 </Box>
 

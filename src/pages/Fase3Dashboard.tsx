@@ -54,6 +54,7 @@ const Fase3Dashboard = () => {
                         onChange={handleChange}
                         variant="scrollable"
                         scrollButtons="auto"
+                        allowScrollButtonsMobile
                         textColor="primary"
                         indicatorColor="primary"
                     >
